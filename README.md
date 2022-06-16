@@ -1,6 +1,6 @@
 # ci-bitrise-step-google-play-rollout
 
-Checks if there is a production release with an in progress rollout in the Play Store. If found, it rolls it out to 100%
+Checks if there is a release for a given track with an in progress rollout in the Play Store. If found, it rolls it out to 100%
 
 ## How to use this Step
 

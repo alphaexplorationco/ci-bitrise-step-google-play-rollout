@@ -5,16 +5,8 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo "Rolling out release for: ${package_name}"
 
-#echo "Downloading credentials from remote file"
-#wget -O "${SCRIPT_DIR}/credentials.json" ${service_account_json_key_path}
-
-if [ -z "$service_account_json_key_content" ] ; then
-    echo "Downloading credentials from remote file"
-    wget -O "${SCRIPT_DIR}/credentials.json" ${service_account_json_key_path}
-else
-    echo "Using local content credentials"
-    echo "$service_account_json_key_content" > "${SCRIPT_DIR}/credentials.json"
-fi
+echo "Downloading credentials from service account file path"
+wget -O "${SCRIPT_DIR}/credentials.json" ${service_account_json_key_path}
 
 pipenv install google-api-python-client
 pipenv install oauth2client

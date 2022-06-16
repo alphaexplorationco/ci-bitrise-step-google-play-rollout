@@ -7,7 +7,7 @@ from oauth2client.client import AccessTokenRefreshError
 from oauth2client.service_account import ServiceAccountCredentials
 
 
-# To run: rollout package_name json_credentials_path
+# To run: rollout package_name json_credentials_path track
 def main():
     PACKAGE_NAME = sys.argv[1]
     TRACK = sys.argv[3]
@@ -50,18 +50,20 @@ def main():
                     track_data["releases"],
                 )
             )
-            if len(completed_releases) == 2:
-                track_data["releases"].remove(completed_releases[1])
+            track_data["releases"] = completed_releases[:1]
 
             print("Updating status: ", track_data)
+
             service.edits().tracks().update(
                 editId=edit_id, track=TRACK, packageName=PACKAGE_NAME, body=track_data
             ).execute()
+
             commit_request = (
                 service.edits()
                 .commit(editId=edit_id, packageName=PACKAGE_NAME)
                 .execute()
             )
+
             print("✅ Edit ", commit_request["id"], " has been committed")
         else:
             print("✅ No rollout needed")

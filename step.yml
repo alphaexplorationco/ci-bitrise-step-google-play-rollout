@@ -1,7 +1,7 @@
 title: |-
   Update Google Play Rollout
 summary: |
-  Checks if there is a production release with an in progress rollout in the Play Store. If found, it rolls it out to 100%
+  Checks if there is a track release with an in progress rollout in the Play Store. If found, it rolls it out to 100%
 description: |
   The step makes use of the python library and Edits Api from Google Play. It downloads the info from the track, and looks if any release in there has a 'userFraction' property defined. In case it has, and it is between 0 and 1, then it just modifies it to the next step, or completes the release if next is 100%
 website: https://github.com/alphaexplorationco/ci-bitrise-step-google-play-rollout
@@ -29,11 +29,6 @@ project_type_tags:
 type_tags:
   - deploy
 
-is_requires_admin_user: true
-is_always_run: false
-is_skippable: false
-run_if: ""
-
 deps:
   brew:
   - name: pipenv
@@ -52,16 +47,8 @@ inputs:
     opts:
       title: Service Account JSON key file path
       summary: |-
-        Path to the service account's JSON key file. It must be a Secret Environment Variable, pointing to either a file uploaded to Bitrise or to a remote download location.
-      is_required: false
-      is_sensitive: true
-      is_expand: true
-  - service_account_json_key_content:
-    opts:
-      title: Service Account JSON key content
-      summary: |-
-        Content of a previously donwloaded service account's JSON key file. It must be a Secret Environment Variable, containing the data from the Google key file. Either this or service_account_json_key_path needs to be provided
-      is_required: false
+        Path to the service account's JSON key file. It must be a secret environment variable, pointing to either a file uploaded to Bitrise or to a remote download location.
+      is_required: true
       is_sensitive: true
   - package_name: 
     opts:
@@ -69,11 +56,9 @@ inputs:
       summary: |-
         Package name of the app.
       is_required: true
-      is_expand: true
   - track: 
     opts:
       title: Track name
       summary: |-
         Track name of the release.
       is_required: true
-      is_expand: true
