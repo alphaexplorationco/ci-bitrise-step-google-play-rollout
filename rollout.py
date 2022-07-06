@@ -37,7 +37,8 @@ def main():
         for release in track_data["releases"]:
             if "userFraction" in release:
                 rolloutPercentage = release["userFraction"]
-                if rolloutPercentage < 1.0:
+                status = release["status"]
+                if rolloutPercentage < 1.0 and status == "inProgress":
                     del release["userFraction"]
                     release["status"] = "completed"
                 else:
