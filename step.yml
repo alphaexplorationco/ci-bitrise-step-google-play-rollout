@@ -22,7 +22,7 @@ host_os_tags:
 #
 project_type_tags:
   - android
-
+  
 # Type tags are used for categorizing steps, for easier step discovery in Step Libraries.
 # You can find more information about type tags in the Step Development Guideline:
 # https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
@@ -31,32 +31,32 @@ type_tags:
 
 deps:
   brew:
-  - name: python@3.10
+  - name: pipenv
   - name: wget
   apt_get:
-  - name: python3.10
+  - name: pipenv
   - name: wget
-
+  
 toolkit:
   bash:
     entry_file: step.sh
 
 
 inputs:
-  - service_account_json_key_path:
+  - service_account_json_key_path: 
     opts:
       title: Service Account JSON key file path
       summary: |-
         Path to the service account's JSON key file. It must be a secret environment variable, pointing to either a file uploaded to Bitrise or to a remote download location.
       is_required: true
       is_sensitive: true
-  - package_name:
+  - package_name: 
     opts:
       title: Package name
       summary: |-
         Package name of the app.
       is_required: true
-  - track:
+  - track: 
     opts:
       title: Track name
       summary: |-
