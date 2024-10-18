@@ -2,7 +2,7 @@ import copy
 import sys
 
 import httplib2
-from apiclient.discovery import build
+from googleapiclient.discovery import build
 from oauth2client.client import AccessTokenRefreshError
 from oauth2client.service_account import ServiceAccountCredentials
 
