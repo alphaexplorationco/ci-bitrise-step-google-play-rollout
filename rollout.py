@@ -1,10 +1,12 @@
 import copy
 import sys
 
+from google.auth.exceptions import RefreshError
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from google_auth_httplib2 import AuthorizedHttp
+
 import httplib2
-from apiclient.discovery import build
-from oauth2client.client import AccessTokenRefreshError
-from oauth2client.service_account import ServiceAccountCredentials
 
 
 # To run: rollout package_name json_credentials_path track
@@ -12,13 +14,14 @@ def main():
     PACKAGE_NAME = sys.argv[1]
     TRACK = sys.argv[3]
 
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        sys.argv[2], scopes="https://www.googleapis.com/auth/androidpublisher"
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=sys.argv[2],
+        scopes=["https://www.googleapis.com/auth/androidpublisher"],
     )
 
-    http = credentials.authorize(httplib2.Http())
-
-    service = build("androidpublisher", "v3", http=http)
+    http = httplib2.Http()
+    authorized_http = AuthorizedHttp(credentials, http)
+    service = build("androidpublisher", "v3", http=authorized_http)
 
     try:
         edit_request = service.edits().insert(body={}, packageName=PACKAGE_NAME)
@@ -36,14 +39,15 @@ def main():
         print("Current status: ", track_data)
         for release in track_data["releases"]:
             if "userFraction" in release:
-                rolloutPercentage = release["userFraction"]
+                rollout_percentage = release["userFraction"]
                 status = release["status"]
-                if rolloutPercentage < 1.0 and status == "inProgress":
+                if rollout_percentage < 1.0 and status == "inProgress":
                     del release["userFraction"]
                     release["status"] = "completed"
                 else:
                     print("Release already fully rolled out or halted")
                     continue
+
         if original_track_data != track_data:
             completed_releases = list(
                 filter(
@@ -69,7 +73,7 @@ def main():
         else:
             print("✅ No rollout needed")
 
-    except AccessTokenRefreshError:
+    except RefreshError:
         raise SystemExit("The credentials provided are not authorized")
 
 
